@@ -143,6 +143,7 @@ describe("Evaluatex", function () {
         for (let y = 0; y < yAry.length; y++) {
           test(`${x}\\times${y}`, x * y, {}, {}, { latex: true });
           test(`${x}\\cdot${y}`, x * y, {}, {}, { latex: true });
+          test(`${x}${y}`, x * y, {}, {}, { latex: true })
         }
       }
   });
@@ -174,5 +175,14 @@ describe("Evaluatex", function () {
         assert.instanceOf(err, Error);
         assert.include(err.message, "Symbol a is undefined or not a number");
       }
+    });
+
+    it("arctrig functions work", function () {
+      const xAry = [0, Math.PI/6, Math.PI/4]
+      xAry.forEach(x => {
+        test(`\\arccos{${x}}`, Math.acos(x), {}, {}, { latex: true });
+        test(`\\arcsin{${x}}`, Math.asin(x), {}, {}, { latex: true });
+        test(`\\arctan{${x}}`, Math.atan(x), {}, {}, { latex: true })
+      })
     });
 });
