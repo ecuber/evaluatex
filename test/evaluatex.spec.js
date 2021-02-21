@@ -143,7 +143,6 @@ describe("Evaluatex", function () {
         for (let y = 0; y < yAry.length; y++) {
           test(`${x}\\times${y}`, x * y, {}, {}, { latex: true });
           test(`${x}\\cdot${y}`, x * y, {}, {}, { latex: true });
-          test(`${x}${y}`, x * y, {}, {}, { latex: true })
         }
       }
   });
@@ -177,12 +176,35 @@ describe("Evaluatex", function () {
       }
     });
 
-    it("arctrig functions work", function () {
+    it("support arctrig functions", function () {
       const xAry = [0, Math.PI/6, Math.PI/4]
       xAry.forEach(x => {
         test(`\\arccos{${x}}`, Math.acos(x), {}, {}, { latex: true });
         test(`\\arcsin{${x}}`, Math.asin(x), {}, {}, { latex: true });
         test(`\\arctan{${x}}`, Math.atan(x), {}, {}, { latex: true })
       })
+    });
+
+    it("supports \\pi in LaTex", function () {
+      test(`\\pi`, Math.PI, {}, {}, { latex: true });
+      test(`\\pi + 2`, Math.PI + 2, {}, {}, { latex: true });
+      test(`\\sin{\\frac{2\\pi}{4}}`, 1, {}, {}, { latex: true }); // check if coeff. of pi works
+    });
+
+    it("supports implicit multiplication between commands, variables, and constants", function () {
+      test("3\\sqrt{2}", 3 * Math.sqrt(2), {}, {}, { latex: true });
+      test("2\\sqrt{x^2+1}", 2 * Math.sqrt(5), {}, { x: 2 }, { latex: true });
+      test("2\\frac{2\\arcsin x}{3\\sqrt{y}}", (4 * Math.asin(1)) / 6, {}, { x: 1, y: 4 }, { latex: true }); //ultimate test
+      test("xy", 2 * 2, {}, { x: 2, y: 2 }, { latex: true });
+    });
+
+    it("supports euler's number as a defualt constant", function () {
+      test(`e^{x}`, Math.E, {}, { x: 1 }, { latex: true });
+      test(`e^x`, Math.E, {}, { x: 1 }, { latex: true });
+    });
+
+    it("supports natural log", function () {
+      test(`\\ln x`, Math.log(2), { x: 2}, { latex: true });
+      test(`\\ln \\left(2x+1\\right)`, Math.log(4), { x: 2}, { latex: true });
     });
 });

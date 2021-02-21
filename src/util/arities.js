@@ -18,4 +18,6 @@ export default {
     "asec": 1,
     "acsc": 1,
     "acot": 1,
+    "log": 1,
+    "ln": 1
 };
