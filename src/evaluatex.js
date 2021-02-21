@@ -11,34 +11,39 @@ import arities from "./util/arities"
  */
 export default function evaluatex(expression, constants = {}, options = {}) {
 
+    // Evaluatex it great, but its LaTex interpreter has some issues that are more easily solved by
+    // over-formatting the input string than modifying the parser itself, which works relatively well
+    // for its purposes.
+
+    // Each element contains the LaTex syntax for a command at index 0 and the ASCII equivalent.
+    const replacements = [
+        ['arctan', 'atan'],
+        ['arccos', 'acos'],
+        ['arcsin', 'asin'],
+        ['ln', 'log'],
+        ['\\pi', `(${Math.PI})`],
+    ];
+
+    // Replace some LaTex syntax to cooperate with evaluatex's native parser
+    replacements.forEach(r => {
+        expression = expression.replaceAll(r[0], r[1]);
+    });
+
+    // Support Euler's constant by default
+    constants['e'] = Math.E; 
+
+    // Create RegExp matches for all supported LaTex commands
+    const fnregex = Object.keys(arities).map(func => {
+        let str;
+        if (arities[func] === 2)
+            str = `\\\\${func}\\{((.)*)\\}{2}`;
+        else {
+            str = `\\\\${func}((\\{((.)*)\\})| [^{}]+){1}`;
+        }
+        return RegExp(str, 'gi');
+    });
+
     if (options.latex) {
-        const replacements = [
-            ['arctan', 'atan'],
-            ['arccos', 'acos'],
-            ['arcsin', 'asin'],
-            ['\\pi', `(${Math.PI})`],
-            ['ln', 'log']
-        ];
-
-        // change latex syntax to cooperate with evaluatex's native parser
-        replacements.forEach(r => {
-            expression = expression.replaceAll(r[0], r[1]);
-        });
-
-        // support euler's constant by default
-        constants['e'] = Math.E; 
-
-        // create regex matches for all supported functions
-        const fnregex = Object.keys(arities).map(func => {
-            let str;
-            if (arities[func] == 2)
-                str = `\\\\${func}\\{((.)*)\\}{2}`
-            else {
-                str = `\\\\${func}((\\{((.)*)\\})| [^{}]+){1}` // accepts single arg fn's with or without { }
-            }
-            return RegExp(str, 'gi')
-        });
-
         // wrap all functions in { } to force implicit multiplication
         fnregex.forEach(r => {
             expression = expression.replace(r, (match) => `{${match}}`);
@@ -49,6 +54,7 @@ export default function evaluatex(expression, constants = {}, options = {}) {
             expression = expression.replaceAll(variable, `{${variable}}`);
         });
     }
+    // console.log('formatted', expression);
 
     const tokens = lexer(expression, constants, options);
     const ast = parser(tokens).simplify();

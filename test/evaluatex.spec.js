@@ -204,7 +204,7 @@ describe("Evaluatex", function () {
     });
 
     it("supports natural log", function () {
-      test(`\\ln x`, Math.log(2), { x: 2}, { latex: true });
-      test(`\\ln \\left(2x+1\\right)`, Math.log(4), { x: 2}, { latex: true });
+      test(`\\ln x`, Math.log(2), { x: 2 }, { latex: true });
+      test(`\\ln \\left(2x+1\\right)`, Math.log(5), { x: 2}, { latex: true });
     });
 });
