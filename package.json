@@ -8,6 +8,7 @@
     "license": "MIT",
     "private": false,
     "scripts": {
+        "prepublish": "babel src -d lib",
         "build": "babel -d dist src && webpack && cp dist/evaluatex.min.js evaluatex.docs.js",
         "test": "mocha --require babel-register"
     },
@@ -16,6 +17,10 @@
         "dist"
     ],
     "devDependencies": {
+        "@babel/cli": "^7.12.17",
+        "@babel/core": "^7.12.17",
+        "@babel/plugin-proposal-class-properties": "^7.12.13",
+        "@babel/preset-env": "^7.12.17",
         "babel-cli": "^6.26.0",
         "babel-preset-env": "^1.6.1",
         "babel-preset-stage-2": "^6.24.1",
@@ -28,8 +33,10 @@
     "dependencies": {},
     "babel": {
         "presets": [
-            "env",
-            "stage-2"
+            "@babel/preset-env"
+        ],
+        "plugins": [
+            "@babel/plugin-proposal-class-properties"
         ]
     }
 }
