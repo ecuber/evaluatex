@@ -13,7 +13,7 @@ export default function evaluatex(expression, constants = {}, options = {}) {
 
     // Evaluatex it great, but its LaTex interpreter has some issues that are more easily solved by
     // over-formatting the input string than modifying the parser itself, which works relatively well
-    // for its purposes.
+    // for what it was made to do.
 
     // Each element contains the LaTex syntax for a command at index 0 and the ASCII equivalent.
     const replacements = [
