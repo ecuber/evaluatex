@@ -36,9 +36,9 @@ export default function evaluatex(expression, constants = {}, options = {}) {
     const fnregex = Object.keys(arities).map(func => {
         let str;
         if (arities[func] === 2)
-            str = `\\\\${func}\\{((.)*)\\}{2}`;
+            str = `(\\\\${func})\\{((.)*)\\}{2}`;
         else {
-            str = `\\\\${func}((\\{((.)*)\\})| [^{}]+){1}`;
+            str = `(\\\\${func})((\\{((.)*)\\})| [^{}]+){1}`;
         }
         return RegExp(str, 'gi');
     });
@@ -46,7 +46,9 @@ export default function evaluatex(expression, constants = {}, options = {}) {
     if (options.latex) {
         // wrap all functions in { } to force implicit multiplication
         fnregex.forEach(r => {
-            expression = expression.replace(r, (match) => `{${match}}`);
+            expression = expression.replace(r, (match) => {
+                return `{${match}}`;
+            });
         });
 
         // wrap variables in { } to force implicit multiplication

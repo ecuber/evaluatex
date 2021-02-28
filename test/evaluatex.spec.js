@@ -204,7 +204,13 @@ describe("Evaluatex", function () {
     });
 
     it("supports natural log", function () {
-      test(`\\ln x`, Math.log(2), { x: 2 }, { latex: true });
-      test(`\\ln \\left(2x+1\\right)`, Math.log(5), { x: 2}, { latex: true });
+      test(`ln x`, Math.log(2), {}, { x: 2 }, { latex: true });
+      test(`\\ln \\left(2x+1\\right)`, Math.log(5), {}, { x: 2}, { latex: true });
     });
+
+    it("works with weird cases", function () {
+      test("x^2+y^x", 8, {}, { x: 2, y: 2}, { latex: true });
+      test(`3\\sqrt x`, 3 * Math.sqrt(2), {}, { x: 2 }, { latex: true });
+      test(`3\\ln x`, 3 * Math.log(2), {}, { x: 2 }, { latex: true });
+    })
 });
